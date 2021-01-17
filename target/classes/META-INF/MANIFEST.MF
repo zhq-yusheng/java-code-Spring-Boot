@@ -1,0 +1,29 @@
+Manifest-Version: 1.0
+Main-Class: org.lg.nutritionboot.NutritionbootApplication
+Class-Path: spring-boot-starter-2.3.3.RELEASE.jar spring-expression-5.2.
+ 8.RELEASE.jar logback-core-1.2.3.jar log4jdbc-log4j2-jdbc4.1-1.16.jar a
+ spectjrt-1.5.3.jar bson-4.0.5.jar jackson-module-parameter-names-2.11.2
+ .jar spring-context-support-5.2.8.RELEASE.jar mysql-connector-java-8.0.
+ 22.jar spring-boot-starter-websocket-2.3.3.RELEASE.jar spring-boot-2.3.
+ 3.RELEASE.jar snakeyaml-1.26.jar spring-boot-autoconfigure-2.3.3.RELEAS
+ E.jar spring-web-5.2.8.RELEASE.jar log4j-1.2.17.jar jackson-databind-2.
+ 11.2.jar spring-boot-starter-web-2.3.3.RELEASE.jar spring-websocket-5.2
+ .8.RELEASE.jar mongodb-driver-3.8.2.jar jcl-over-slf4j-1.7.7.jar spring
+ -core-5.2.8.RELEASE.jar spring-boot-starter-json-2.3.3.RELEASE.jar spri
+ ng-boot-starter-log4j-1.3.8.RELEASE.jar mongodb-driver-core-4.0.5.jar s
+ pring-aop-5.2.8.RELEASE.jar spring-boot-starter-logging-2.3.3.RELEASE.j
+ ar aopalliance-1.0.jar tomcat-embed-websocket-9.0.37.jar spring-boot-st
+ arter-tomcat-2.3.3.RELEASE.jar spring-tx-5.2.8.RELEASE.jar spring-data-
+ mongodb-3.0.3.RELEASE.jar java-property-utils-1.15.jar jackson-annotati
+ ons-2.11.2.jar spring-boot-configuration-processor-2.3.3.RELEASE.jar sp
+ ring-boot-devtools-2.3.3.RELEASE.jar log4j-to-slf4j-2.13.3.jar slf4j-ap
+ i-1.7.7.jar spring-boot-starter-aop-2.3.3.RELEASE.jar jackson-datatype-
+ jsr310-2.11.2.jar spring-webmvc-5.2.8.RELEASE.jar jackson-core-2.11.2.j
+ ar jul-to-slf4j-1.7.7.jar spring-beans-5.2.8.RELEASE.jar log4j-api-2.13
+ .3.jar spring-data-commons-2.3.3.RELEASE.jar spring-jcl-5.2.8.RELEASE.j
+ ar spring-messaging-5.2.8.RELEASE.jar spring-boot-starter-data-mongodb-
+ 2.1.7.RELEASE.jar aspectjweaver-1.8.4.jar jackson-datatype-jdk8-2.11.2.
+ jar logback-classic-1.2.3.jar jakarta.annotation-api-1.3.5.jar slf4j-lo
+ g4j12-1.7.7.jar spring-context-5.2.8.RELEASE.jar tomcat-embed-core-9.0.
+ 37.jar fastjson-1.1.41.jar jakarta.el-3.0.3.jar
+

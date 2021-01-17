@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>服务端</title>
+    <script src="../../js/jquery-3.3.1.min.js"></script>
+
+    <style>
+        .threed{
+            text-align: center;
+            color: #eb7350;
+            -webkit-text-stroke: 1px black;
+            letter-spacing: 0.04em;
+            background-color: white;
+        }
+        .btn{
+            text-align: center;
+        }
+        .layui-input{
+            margin-left: 800px;
+            transform:translateY(-21px)
+        }
+    </style>
+</head>
+<body>
+
+
+<div class="layui-row">
+    <h1 class="threed">WebSocket服务端</h1>
+    <div class="layui-col-md8 layui-col-md-offset2" style="margin-top: 20px">
+            <h1 style="text-align: center">服务端</h1>
+            <div class="layui-card" style="text-align: center">
+                <div class="layui-card-body-inline" style="padding-bottom: 20px">
+                    <div class="layui-form-item">
+                    <label class="layui-form-label" style="margin-bottom: 10px">在线数量:<span  id="sum">0</span></label>
+                    </div>
+
+                    <form class="layui-form" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">在线人:</label>
+                            <div id="members" style="margin-bottom: 10px">
+                            </div>
+                        </div>
+                    </form>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">信息内容:</label>
+                        <div class="layui-input-inline" style="width: 300px">
+                            <input id="msg" type="text" name="title" required  lay-verify="required" placeholder="请输入要发送的内容" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <button class="layui-btn" onclick="sendMsg()">发送</button>
+                        <button class="layui-btn" onclick="sendAll()">全部发送</button>
+                        <button class="rotary">开启抽奖</button>
+                        <button class="firstOne">第一轮抽奖</button>
+                        <button class="firstTwo">第二轮抽奖</button>
+                        <button class="firstThird">第三轮抽奖</button>
+                        <button class="boss">抽取锦鲤奖</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-card" style="margin-top: 100px">
+                <div class="layui-card-header">
+                    <h1>操作详情</h1>
+                </div>
+
+                <div id="content" class="layui-card-body" placeholder="请输入要发送的内容">
+
+                </div>
+            </div>
+    </div>
+</div>
+   <script type="text/javascript">
+       var websocketServerInfo;
+       var adminName = 'lg';
+       $(document).ready(function(){
+           //ajax调用controller 获得 最新的用户列表和人数
+           $.ajax({
+               url:"../../configController/websocketServerInfo",
+               type:"get",
+               dataType:"json",
+               success:function(dto){
+                   websocketServerInfo = dto.msg;
+               }
+           });
+
+
+           $.ajax({
+               url:"../../webSocketAdmin",
+               type:"post",
+               dataType:"json",
+               success:function(dto){
+                  var webSocketVos = dto.tList;
+                  var nums = dto.t;
+                  $("#sum").text(nums);
+                  var checkboxs = "";
+                  console.log(webSocketVos);
+                  //勾选用户的用户名提交给服务器
+                  $(webSocketVos).each(function(i,webSocketVo){
+                      checkboxs += webSocketVo+" <input type=\"checkbox\"  name=\"check\" title='"+webSocketVo+"'>";
+                  });
+                   $("#members").append(checkboxs);
+               }
+           });
+
+
+       });
+       function sendMsg(){
+           var user = [];
+           $("input[name='check']:checked").each(function(i){//把所有被选中的复选框的值存入数组
+               user =user+$(this).attr("title")+","
+           });
+           console.log(user)
+
+            if (user.length > 0) {
+                user = user.substr(0, user.length - 1);
+            } else {
+               console.log("未选中发送人")
+                var content = $("#content").html();
+                $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                    '                        <p><q style="color: red">'+'系统提示:请在多选框中选择要发送的用户'+ '</span></p>\n' +
+                    '                    </div>\n' +
+                    '                    <br/>');
+                return
+            }
+
+           var msg = $("#msg").val();
+		   if(msg!=null){
+				$.ajax({
+                    method: 'get',
+                    url: '/sendmsg',
+                    data: {
+                        "username": user,
+                        "msg": msg
+                    },
+                    success:function(data) {
+                        var content = $("#content").html();
+                        $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                            '                        <p><q style="color: #eb7350">'+'服务器推送  '+msg+' -->'+user+ '</span></p>\n' +
+                            '                    </div>\n' +
+                            '                    <br/>');
+                        console.log(data);
+                    }
+                })
+		   }else{
+			   alert("请填写要发送的用户昵称或者发送内容");
+		   }
+	   }
+
+	   function sendAll(){
+		   var msg = $("#msg").val();
+		   if(msg!=null){
+               $.ajax({
+                   method: 'get',
+                   url: '/sendAll',
+                   data:{
+                       msg:msg
+                   },
+                   success:function(data) {
+                       var content = $("#content").html();
+                       $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                           '                        <p><q style="color: #eb7350">'+'服务器推送  '+msg+' --> 所有用户'+ '</span></p>\n' +
+                           '                    </div>\n' +
+                           '                    <br/>');
+                       console.log(data);
+                   }
+               })
+		   }else{
+			   alert("请填写要发送的内容");
+		   }
+	   }
+
+       function connect(){
+               if ('WebSocket' in window){
+                   ws = new WebSocket(websocketServerInfo+adminName);
+               }
+               else if ('MozWebSocket' in window){
+                   ws = new MozWebSocket(websocketServerInfo+adminName);
+               }
+               else{
+                   alert("该浏览器不支持websocket");
+               }
+               ws.onmessage = function(evt) {
+                   var content = $("#content").html();
+                   $("#content").html(content+'<div style="text-align: right;margin-bottom: 8px">\n' +
+                       '                        <p><q style="color: mediumorchid;text-align: right">'+evt.data+ '</span></p>\n' +
+                       '                    </div>\n' +
+                       '                    <br/>');
+                   console.log(msg)
+               };
+
+               ws.onclose = function(evt) {
+                  console.log('连接关闭')
+               };
+
+               ws.onopen = function(evt) {
+                   var content = $("#content").html();
+                   $("#content").html(content+'<div style="margin-bottom: 8px">\n' +
+                       '                        <p><q style="color: #eb7350">'+'服务器初始化成功...'+ '</span></p>\n' +
+                       '                    </div>\n' +
+                       '                    <br/>');
+                  console.log('连接成功')
+               };
+       }
+           //connect()
+   </script>
+<script>
+    $(document).ready(function () {
+        $(".rotary").click(function () {
+           var msg =  $("#rotary").val();
+            //alert(msg)
+            $('#msg').val(msg);
+        });
+        $(".from").click(function () {
+            var msg =  $("#from").val();
+            //alert(msg)
+            $('#msg').val(msg);
+        });
+        $(".random").click(function () {
+            var msg =  $("#dd").val();
+            //alert(msg)
+            $('#msg').val(msg);
+        });
+        $(".firstOne").click(function () {
+            $.ajax({
+                url:"../../../customerController/random",
+                data:{
+                    "code":1,
+                    "number":3
+                },
+                dataType:"json",
+                success:function (dto) {
+                    console.log(dto)
+                    alert(dto.msg)
+                }
+            })
+        });
+        $(".firstTwo").click(function () {
+            $.ajax({
+                url:"../../../customerController/random",
+                data:{
+                    "code":2,
+                    "number":3
+                },
+                dataType:"json",
+                success:function (dto) {
+                    console.log(dto)
+                    alert(dto.msg)
+                }
+            })
+        });
+        $(".firstThird").click(function () {
+            $.ajax({
+                url:"../../../customerController/random",
+                data:{
+                    "code":3,
+                    "number":3
+                },
+                dataType:"json",
+                success:function (dto) {
+                    console.log(dto)
+                    alert(dto.msg)
+                }
+            })
+        });
+
+        $(".boss").click(function () {
+            $.ajax({
+                url:"../../../customerController/random",
+                data:{
+                    "code":4,
+                    "number":1
+                },
+                dataType:"json",
+                success:function (dto) {
+                    console.log(dto)
+                    alert(dto.msg)
+                }
+            })
+        });
+    });
+
+
+</script>
+<input type ="hidden" id="rotary" value = '<html><body><script>choujiang()</script></body></html>' >
+<!--<meta http-equiv="Refresh" content="8";/>-->
+</body>
+
+</html>
